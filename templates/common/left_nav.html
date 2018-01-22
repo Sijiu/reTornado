@@ -1,0 +1,48 @@
+   <div>
+    <nav class="main-menu animated fadeInLeft" data-step='2' data-intro='主引导菜单' data-position='right'>
+    <ul>
+        {% for n in nav %}
+		{% if n.get('sub','')!='' %}
+		<li>
+            <a href="{% if n['url']=="#" %}{{ n['url'] }}{% else %}{{ baseUrl }}{{ n['url'] }}{% end %}">
+                <i class="{{ n['className'] }} nav-icon"></i>
+				<span class="nav-text">{{ n['title'] }}</span>
+            </a>
+			<ul>
+			{% for k in n['sub'] %}
+			 <li>
+				<a href="{{ baseUrl }}{{ k['url'] }}">
+					<i class="{{ k['className'] }} nav-icon"></i>
+					<span class="nav-text">{{ k['title'] }}</span>
+				</a>
+             </li>
+			{% end %}
+			</ul>
+		</li>
+		{% else %}
+		<li>
+            <a href="{{ baseUrl }}{{ n['url'] }}">
+                <i class="{{ n['className'] }} nav-icon"></i>
+				<span class="nav-text">{{ n['title'] }}</span>
+            </a>
+        </li>
+        {% end %}
+        {% end %}
+    </ul>
+<!--     <ul class="logout">
+		<li>
+            <a href="{{ baseUrl }}setting/index">
+                <i class="left-icon nav-icon left-icon-set-h"></i>
+                <span class="nav-text">设置</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ baseUrl }}logout">
+                <i class="left-icon nav-icon left-icon-logOut-h"></i>
+                        <span class="nav-text">
+                            登出系统
+                        </span>
+            </a>
+        </li>
+    </ul> -->
+</nav>

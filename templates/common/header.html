@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+{#    <title>{{sitetitle}} - {{pagename}}</title>#}
+    <title>site-title - pagename</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="../static/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../static/css/cbs.css">
+    <!-- 时间插件 css-->
+{# <!--   <link rel="stylesheet" href="{{baseUrl}}static/js/libs/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">#}
+{# -->   <!-- Fonts CSS: -->#}
+
+    <!-- adds CSS media query support to IE8   -->
+    <!--[if lt IE 9]>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+        <script src="assets/js/vendor/respond.min.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+	<script>
+        // Global variables
+		{#var baseurl='{{baseUrl}}';#}
+		var baseurl='http://127.0.0.1:8888/';
+        var proton = {};
+        var verboseBuild = true;
+        var screenXs = 480; // JS equivalent to @screen-xs less variable, if you change this in proton-variables.less, you must also change it here
+        var screenMd = 992; // JS equivalent to @screen-md less variable, if you change this in proton-variables.less, you must also change it here
+
+        // Check if browser is internet explorer later than version 9
+        var ltIE9 = false;
+        !/\blt-ie9\b/.test(document.getElementsByTagName('html')[0].className) || (ltIE9 = true);
+        if(ltIE9){
+            verboseBuild = false;
+        }
+    </script>
+{#	<script src="{{baseUrl}}static/js/libs/seajs/sea.js"></script>#}
+{#    <script src="{{baseUrl}}static/js/config.js"></script>#}
+{#    <script>#}
+{#        seajs.use('{{baseUrl}}static/js/modules/main');#}
+{#    </script>#}
+    <script src="../static/js/libs/seajs/sea.js"></script>
+    <script src="../static/js/config.js"></script>
+    <script>
+        seajs.use('{{ static_url('js/modules/main') }}');
+    </script>
+</head>
+
+<body>
+<header class="main-header">
+            <div class="">
+{#                <div class="pull-left">#}
+{#                    <img src="{{baseUrl}}static/img/logo.png" class="" style="margin-top: 11px"><div class=" top-title ml10 pull-right">中国电信省公司<br>业务受理门户</div></div>#}
+{#                <div class="pull-right" style="line-height: 66px"><span>欢迎用户&nbsp;&nbsp;{{ current_user['managerName'] }}</span>#}
+{#                <div class="pull-right" style="margin-left: 47px;margin-top: 5px"><a href="{{ baseUrl }}setting/index"><i class="left-icon nav-icon left-icon-set-h" style="width: 21px;margin-left: 0"></i></a><a href="{{ baseUrl }}logout" style="margin-left: 20px"><i class="left-icon nav-icon left-icon-logOut-h"  style="width: 21px;margin-left: 20px"></i></a></div></div>#}
+            </div>
+        </header>
