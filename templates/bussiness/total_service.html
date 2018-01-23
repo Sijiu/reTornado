@@ -27,7 +27,7 @@
                         <label class="control-label col-sm-2" for="">{{ productAttr[attr]["name"] }}</label>
                         <div class="col-sm-10">
                         {% if productAttr[attr]["inputType"] == "select" %}
-                            <select id="{{ productAttr[attr] }}_select" name="os" class="form-control">
+                            <select id="{{ attr }}_select" name="{{ attr }}" class="form-control">
                                 {% for z in value_list %}
                                     <option value="{{z}}">{{value_list[z]["name"]}}</option>
                                 {% end %}
@@ -35,17 +35,33 @@
                         {% elif productAttr[attr]["inputType"] == "button" %}
                         {% set unit = productAttr[attr].get("unit", "") %}
                             <div class="btn-group btn-group-justified">
-                                {% for k in value_list %}
-                                <div class="btn-group">
-                                    <a class="btn btn-primary btn-lg"  data-type="cpu" data-value="{{ k }}">
-                                        {{ k }}{{ unit }}
-                                    </a>
-                                </div>
+                                {% if productAttr[attr].get("innerAttrValueList", "") %}
+                                {% set inner_value = productAttr[attr]["innerAttrValueList"] %}
+                                    {% for k in value_list %}
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary btn-lg {% if int(k)==1 %}active{%end%}" data-range="{{ inner_value[k] }}"
+                                           data-type="{{ attr }}" data-value="{{ k }}">
+                                            {{ k }}{{ unit }}
+                                        </a>
+                                    </div>
+                                    {% end %}
+                                {% elif productAttr[attr].get("innerBy") %}
+                                {% set inner_by =  productAttr[attr]["innerBy"]%}
+                                {% set inner_value = productAttr[inner_by]["innerAttrValueList"] %}
+                                    {% for i in inner_value %}
+                                    {% for k in inner_value[i] %}
+                                        <div class="btn-group {% if i!=1 %}hidden{%end%}" >
+                                            <a data-type="{{ attr }}" data-value="{{ int(k)*1024 }}" class="btn btn-primary btn-lg  {% if int(k)==1 %}active{%end%}">
+                                                {{ k }} {{ unit }}
+                                            </a>
+                                        </div>
+                                    {% end %}
+                                    {% end %}
                                 {% end %}
                             </div>
                         {% elif productAttr[attr]["inputType"] == "selectInput" %}
                             <div class="col-sm-4">
-                                <select id="{{ attr }}_select" name="{{ attr }}" class="form-control">
+                                <select id="{{ attr }}_select" name="{{ attr }}_select" class="form-control">
                                     {% for k in productAttr[attr]["valueList"] %}
                                         <option value="{{k}}">{{productAttr[attr]["valueList"][k]["name"]}}</option>
                                     {% end %}
@@ -53,7 +69,7 @@
                             </div>
                             <div class="input-group col-sm-4" style="bottom: 0px">
                                 <input type="{{ productAttr[attr]["inputs"]["type"] }}" class="form-control"
-                                       id="{{ attr }}_value" value="{{ productAttr[attr]["inputs"]["default"] }}">
+                                       id="{{ attr }}_value" name="{{ attr }}_value" value="{{ productAttr[attr]["inputs"]["default"] }}">
                                 {% if productAttr[attr]["inputs"].get("unit", "") %}
                                 <span class="input-group-addon">{{ productAttr[attr]["inputs"]["unit"]}}</span>
                                 {% end %}
@@ -61,7 +77,7 @@
                         {% elif productAttr[attr]["inputType"] == "input" %}
                             {% set value = productAttr[attr]["inputs"] %}
                             <input type="{{ value["type"] }}" class="form-control"
-                                       id="{{ attr }}_value" value="{{ value["default"] }}">
+                                       id="{{ attr }}_value" name="{{ attr }}_value" value="{{ value["default"] }}">
                                 {% if value.get("unit", "") %}
                                 <span class="input-group-addon">{{ value["unit"]}}</span>
                                 {% end %}
@@ -100,9 +116,9 @@
 <script>
 
 
-    seajs.use(['jquery','modules/publicip','modules/calender'], function($,Services,calender) {
-         {#new Services($('.form-horizontal'),$.parseJSON('{% raw initData %}'));#}
-        //var sCalendar = new calender();
+    seajs.use(['jquery','modules/services','modules/calender'], function($,Services,calender) {
+        new Services($('.form-horizontal'),$.parseJSON('{% raw initData %}'));
+        var sCalendar = new calender();
         $('#period_day').on('click',function(e){new calender().show(this)})
 
     });

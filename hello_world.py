@@ -24,14 +24,25 @@ from portal.bussiness_type import BU
 
 define("port", default=8888, help="run on the given port", type=int)
 
+class BaseHandler(tornado.web.RequestHandler):
+    def set_default_headers(self):
+        print "setting headers!!!"
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
 
-class MainHandler(tornado.web.RequestHandler):
+    def options(self):
+        # no body
+        self.set_status(204)
+        self.finish()
+
+class MainHandler(BaseHandler):
 
     def get(self):
         self.write("Hello, world  start")
 
 
-class BillHandler(tornado.web.RequestHandler):
+class BillHandler(BaseHandler):
 
     def get(self):
         html_data = {'baseUrl': "http://127.0.0.1:8888/",
@@ -46,15 +57,28 @@ class BillHandler(tornado.web.RequestHandler):
         self.render("bussiness/total_service.html", **html_data)
 
 
-class OrderInfoHandler(tornado.web.RequestHandler):
+class OrderInfoHandler(BaseHandler):
     def get(self):
         self.write(self.get_argument("id", "id"))
 
 
-class CreateResourceHandler(tornado.web.RequestHandler):
+class GetPriceHandler(BaseHandler):
+    def post(self):
+        self.write({"price": 20})
+
+
+class GetVPCHandler(BaseHandler):
+    def post(self):
+        self.write({"price": 20})
+
+
+class CreateResourceHandler(BaseHandler):
     def get(self):
         self.write(self.get_argument("id", "id"))
 
+    def post(self):
+        param = self.get_body_argument("id", "ids")
+        self.write(param)
 
 def main():
     tornado.options.parse_command_line()
@@ -70,7 +94,10 @@ def main():
         (r"/", MainHandler),
         (r"/bill", BillHandler),
         (r"/order/info", OrderInfoHandler),
-        (r"/business/createresitem", CreateResourceHandler)
+        (r"/business/createresitem", CreateResourceHandler),
+        (r"/business/getitemprice", GetPriceHandler),
+        (r"/business/getvpclist", GetVPCHandler),
+        (r"/business/getoslist", GetVPCHandler),
 
     ],
         template_path=os.path.join(os.path.dirname(__file__), "templates"),

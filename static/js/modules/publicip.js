@@ -14,8 +14,8 @@ define(function(require, module, exports) {
         this.$zone = this.$el.find('#zone_select');
         this.$net = this.$el.find('input.slider-net');
         this.$netInput = this.$el.find('input.input-net');
-        this.$period_type=this.$el.find('#period');
-        this.$period_num=this.$el.find('#period_num');
+        this.$period_type=this.$el.find('#period_select');
+        this.$period_num=this.$el.find('#period_value');
         this.$period_day=this.$el.find('#period_day');
         this.$order_num=this.$el.find('#order_num');
         this.$businessOrderId=this.$el.find('#businessOrderId');
@@ -60,7 +60,7 @@ define(function(require, module, exports) {
               if(!$.isEmptyObject(initData)) {
                this.itemInfo();
             }else{
-                console.log(123);
+                console.log("what?");
                 initServicesFlage=false;
                this.$zone.trigger('change');
                this.getCloudPrice(true);
@@ -176,17 +176,17 @@ define(function(require, module, exports) {
                 bootbox.alert('价格获取中，请稍后');
                 return false
             }
-            console.log($("#pageType").val());
+            console.log("pageType---", $("#pageType").val());
 			 if($("#pageType").val()=='change'){
                 params['businessOrderItemId'] = $("#businessOrderItemId").val();
             }
+            console.log("====", $('#service_post_form').attr('action'));
             var req = $.ajax({
                 url: $('#service_post_form').attr('action'),
                 data: params,
                 type: 'POST',
 				dataType:'json'
             });
-
             req.done(function(data) {if(data.return==false){bootbox.alert(data.msg)}else{
                 bootbox.alert('保存成功');
                 document.location=baseurl+data.url;

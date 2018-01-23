@@ -513,13 +513,15 @@ define(function(require, module, exports) {
             $cpus.removeClass('active');
             $target.addClass('active');
             this.selected_cpu = $target.data('value');
-            console.log("123444");
+            console.log("123444====", range, typeof range);
             this.changeMemoryRange(range);
             this.getCloudPrice(true);
         },
         changeMemoryRange: function(range) {
-            var min = range.split(',')[0],
-                max = range.split(',')[1],
+            // var min = range.split(',')[0],
+            //     max = range.split(',')[1],
+            var min = range[0],
+                max = range[range.length -1],
                 $validMemories = $();
 
             this.$memory.each(function(index, memory) {
