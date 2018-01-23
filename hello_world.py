@@ -34,13 +34,26 @@ class MainHandler(tornado.web.RequestHandler):
 class BillHandler(tornado.web.RequestHandler):
 
     def get(self):
-        html_data = {'baseUrl': "http://127.0.0.1:8888/"}
+        html_data = {'baseUrl': "http://127.0.0.1:8888/",
+                     "pageType": "add",
+                     "businessOrderId": "xxx",
+                     "initData": {}
+                     }
         serviceTag = self.get_argument('serviceTag', default='vms', strip=True)
         resourceType = self.get_argument('resourceType', default='vm', strip=True)
         service_data_new = BU[serviceTag + "-" + resourceType]
         html_data = dict(html_data, **service_data_new)
         self.render("bussiness/total_service.html", **html_data)
 
+
+class OrderInfoHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write(self.get_argument("id", "id"))
+
+
+class CreateResourceHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write(self.get_argument("id", "id"))
 
 
 def main():
@@ -56,6 +69,9 @@ def main():
     application = tornado.web.Application([
         (r"/", MainHandler),
         (r"/bill", BillHandler),
+        (r"/order/info", OrderInfoHandler),
+        (r"/business/createresitem", CreateResourceHandler)
+
     ],
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
         static_path=os.path.join(os.path.dirname(__file__), "static"),

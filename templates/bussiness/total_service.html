@@ -53,13 +53,44 @@
                             </div>
                             <div class="input-group col-sm-4" style="bottom: 0px">
                                 <input type="{{ productAttr[attr]["inputs"]["type"] }}" class="form-control"
-                                       id="{{ attr }}_value" readonly="" value="{{ productAttr[attr]["inputs"] }}">
-                                <span class="input-group-addon">{{ productAttr[attr]["inputs"]}}</span>
+                                       id="{{ attr }}_value" value="{{ productAttr[attr]["inputs"]["default"] }}">
+                                {% if productAttr[attr]["inputs"].get("unit", "") %}
+                                <span class="input-group-addon">{{ productAttr[attr]["inputs"]["unit"]}}</span>
+                                {% end %}
                             </div>
+                        {% elif productAttr[attr]["inputType"] == "input" %}
+                            {% set value = productAttr[attr]["inputs"] %}
+                            <input type="{{ value["type"] }}" class="form-control"
+                                       id="{{ attr }}_value" value="{{ value["default"] }}">
+                                {% if value.get("unit", "") %}
+                                <span class="input-group-addon">{{ value["unit"]}}</span>
+                                {% end %}
+                        {% elif productAttr[attr]["inputType"] == "fixed" %}
+                            {% set fixed = productAttr[attr]["fixed"] %}
+                            <p class=""><span class="text-success lead">{{ fixed["value"] }}</span>{{ " "+fixed["unit"] }}</p>
                         {% end %}
                         </div>
                     </div>
                     {% end %}
+                        <div class="form-group form-actions">
+                            {% if pageType=='change' %}
+                                {% if jurisdiction['update'] %}
+                                         <div class="col-sm-2 col-sm-offset-2">
+                                            <input type="submit" class="btn btn-primary btn-lg btn-block" value="修改"/>
+                                            </div>
+                                {%end%}
+                            {% else %}
+                                 <div class="col-sm-2 col-sm-offset-2">
+                                        <input type="submit" class="btn btn-primary btn-lg btn-block" value="添加"/>
+                                 </div>
+                            {%end%}
+                            <div class="col-sm-2">
+                                <a class="btn btn-default btn-lg btn-block" href="/order/info?id={{businessOrderId}}">取消</a>
+                            </div>
+                            <!-- <p class="">合计 <span class="text-success lead">200.00</span>元</p> -->
+			            <input id="defaultCpu" type="hidden" value="1">
+                        <input id="defaultMem" type="hidden" value="1024">
+                        </div>
                     </form>
                 </div>
             </div>

@@ -45,7 +45,7 @@ BU = {
                         "sata": {"name": "普通IO"},
                         "sas": {"name": "高IO"}
                     },
-                    "inputs": {"type": "readonly", "max": 100, "min": 1, "default": 15, "unit": "GB"},
+                    "inputs": {"type": "number", "max": 100, "min": 1, "default": 15, "unit": "GB"},
                     "apiUrl": ""
                 },
                 "data_hd": {
@@ -69,7 +69,7 @@ BU = {
                     "inputType": "selectInput",
                     "valueList": {"day": {"name": "天"}, "month": {"name": "月"}, "year": {"name": "年"},
                                   "today": {"name": "制定日期"}},
-                    "inputs": {"type": {"default": "number", "today": "text"}, }
+                    "inputs": {"type": {"default": "number", "today": "text"}, "default": 1, "unit": ""}
                 },
                 "order_num": {
                     "name": u"申请数量",
@@ -79,12 +79,12 @@ BU = {
                 "stand_price": {
                     "name": u"标准资费",
                     "inputType": "fixed",
-                    "fixed": {"type": "number", "max": 100, "min": 1, "default": 15, "unit": "GB"},
+                    "fixed": {"value": 120, "unit": "元"},
                 },
                 "sale_price": {
                     "name": "销售价格",
-                    "inputType": "fixed",
-                    "fixed": {}
+                    "inputType": "calculator",
+                    "fixed": {"value": "", "unit": "元"},
                 }
 
             }
