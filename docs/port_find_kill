@@ -1,0 +1,7 @@
+### Win7查看某个端口被占用的解决方法
+   [百度经验](https://jingyan.baidu.com/album/3aed632e24d3c5701180916d.html?picindex=7)
+   [命令](https://www.cnblogs.com/jingzhishen/p/6215229.html)
+  
+  1. netstat -ano | findstr 80 //列出进程极其占用的端口，且包含 80
+  2. tasklist | findstr 9268 // 9268 为上一步查出来的PID
+  3. taskkill -PID <进程号> -F //强制关闭某个进程

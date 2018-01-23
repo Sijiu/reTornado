@@ -1,0 +1,80 @@
+{% include '../common/header.html' %}
+
+<section class="wrapper extended scrollable animated fadeInRight">
+        <nav class="user-menu">
+            <a href="javascript:;" class="main-menu-access">
+                <i class="icon-reorder"></i>
+            </a>
+        </nav>
+        <ol class="breadcrumb breadcrumb-nav">
+            <li class="active">
+                <a class="bread-page-title" href="#">业务受理单</a>
+            </li>
+            <li>
+                {{ name }}
+            </li>
+        </ol>
+        <div class="new-services">
+            <div class="panel panel-default panel-block">
+                <div class="panel-heading">
+                    <h3 class="panel-title">创建{{ name }}</h3>
+                </div>
+                <div class="panel-body">
+                    <form action="{{ baseUrl}}business/createresitem" method="POST" class="form-horizontal" id="service_post_form">
+                    {% for attr in attr_sort %}
+                    {% set  value_list = productAttr[attr].get("valueList", "") %}
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="">{{ productAttr[attr]["name"] }}</label>
+                        <div class="col-sm-10">
+                        {% if productAttr[attr]["inputType"] == "select" %}
+                            <select id="{{ productAttr[attr] }}_select" name="os" class="form-control">
+                                {% for z in value_list %}
+                                    <option value="{{z}}">{{value_list[z]["name"]}}</option>
+                                {% end %}
+                            </select>
+                        {% elif productAttr[attr]["inputType"] == "button" %}
+                        {% set unit = productAttr[attr].get("unit", "") %}
+                            <div class="btn-group btn-group-justified">
+                                {% for k in value_list %}
+                                <div class="btn-group">
+                                    <a class="btn btn-primary btn-lg"  data-type="cpu" data-value="{{ k }}">
+                                        {{ k }}{{ unit }}
+                                    </a>
+                                </div>
+                                {% end %}
+                            </div>
+                        {% elif productAttr[attr]["inputType"] == "selectInput" %}
+                            <div class="col-sm-4">
+                                <select id="{{ attr }}_select" name="{{ attr }}" class="form-control">
+                                    {% for k in productAttr[attr]["valueList"] %}
+                                        <option value="{{k}}">{{productAttr[attr]["valueList"][k]["name"]}}</option>
+                                    {% end %}
+                                </select>
+                            </div>
+                            <div class="input-group col-sm-4" style="bottom: 0px">
+                                <input type="{{ productAttr[attr]["inputs"]["type"] }}" class="form-control"
+                                       id="{{ attr }}_value" readonly="" value="{{ productAttr[attr]["inputs"] }}">
+                                <span class="input-group-addon">{{ productAttr[attr]["inputs"]}}</span>
+                            </div>
+                        {% end %}
+                        </div>
+                    </div>
+                    {% end %}
+                    </form>
+                </div>
+            </div>
+        </div>
+</section>
+        <div id="calendarPanel" style="position: absolute;visibility: hidden;z-index: 9999;background-color: #FFFFFF;border: 1px solid #CCCCCC;width:175px;font-size:12px;"></div>
+<script>
+
+
+    seajs.use(['jquery','modules/publicip','modules/calender'], function($,Services,calender) {
+         {#new Services($('.form-horizontal'),$.parseJSON('{% raw initData %}'));#}
+        //var sCalendar = new calender();
+        $('#period_day').on('click',function(e){new calender().show(this)})
+
+    });
+</script>
+
+{% include '../common/footer.html' %}

@@ -20,6 +20,7 @@ import tornado.options
 import tornado.web
 import os
 from tornado.options import define, options
+from portal.bussiness_type import BU
 
 define("port", default=8888, help="run on the given port", type=int)
 
@@ -33,8 +34,12 @@ class MainHandler(tornado.web.RequestHandler):
 class BillHandler(tornado.web.RequestHandler):
 
     def get(self):
-        base = {'baseUrl': "http://127.0.0.1:8888/"}
-        self.render("bussiness/index.html")
+        html_data = {'baseUrl': "http://127.0.0.1:8888/"}
+        serviceTag = self.get_argument('serviceTag', default='vms', strip=True)
+        resourceType = self.get_argument('resourceType', default='vm', strip=True)
+        service_data_new = BU[serviceTag + "-" + resourceType]
+        html_data = dict(html_data, **service_data_new)
+        self.render("bussiness/total_service.html", **html_data)
 
 
 
@@ -53,7 +58,8 @@ def main():
         (r"/bill", BillHandler),
     ],
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
-        static_path=os.path.join(os.path.dirname(__file__), "static")
+        static_path=os.path.join(os.path.dirname(__file__), "static"),
+        debug=True
     )
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(options.port)
