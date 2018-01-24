@@ -19,8 +19,8 @@ define(function(require, module, exports) {
         this.$netInput = this.$el.find('input.input-net');
         this.$os = this.$el.find('#os_select');
 		this.$serviceName = this.$el.find('#service_name');
-        this.$period_type=this.$el.find('#period');
-        this.$period_num=this.$el.find('#period_num');
+        this.$period_type=this.$el.find('#period_select');
+        this.$period_num=this.$el.find('#period_value');
         this.$period_day=this.$el.find('#period_day');
         this.$order_num=this.$el.find('#order_num');
         this.$businessOrderId=this.$el.find('#businessOrderId');
@@ -37,9 +37,11 @@ define(function(require, module, exports) {
         this.$ebsNum=this.$el.find('#ebsNum');
         this.$addebs=this.$el.find('#addebs');
         this.$delebs = this.$el.find('a[data-type=delebs]');
-        this.$sysDataType = this.$el.find('#syshdType');
-        this.$dataType = this.$el.find('select[name=datahdType]');
-        this.$dataHd = this.$el.find('input[name=datahd_value]');
+        this.$sysDataType = this.$el.find('#sys_hd_select');
+        // this.$dataType = this.$el.find('select[name=datahdType]');
+        // this.$dataHd = this.$el.find('input[name=datahd_value]');
+        this.$dataType = this.$el.find('#sys_hd_select');
+        this.$dataHd = this.$el.find('#sys_hd_value');
 
         this.$salePrice=this.$el.find('#salePrice');
         this.$businessOrderItemId=this.$el.find('#businessOrderItemId');
@@ -64,7 +66,7 @@ define(function(require, module, exports) {
             this.$order_num.on('change', $.proxy(this.getCloudPrice, this));
             this.$cpu.on('click', $.proxy(this.applyCPU, this));
             this.$memory.on('click', $.proxy(this.applyMemory, this));
-            this.$netInput.on('keyup', $.proxy(this.applyValueToSlider, this));
+            this.$netInput.on('change', $.proxy(this.applyValueToSlider, this));
             this.$el.off('submit').on('submit', $.proxy(this.submit, this));
             this.$period_type.on('change', $.proxy(this.changePeriod, this));
             this.$vpc.on('change', $.proxy(this.changeVpc, this));
@@ -274,6 +276,14 @@ define(function(require, module, exports) {
                // return false;
             }
         },
+        getDataHd: function(ebsNum, params){
+            for(var i=0;i<ebsNum;i++){
+                var data_hd_div = $('.data_hd_div').eq(i);
+                params['dataType'+(i+1)]=data_hd_div.find('select[name="data_hd_select"]').val();
+                params['dataHd'+(i+1)]=data_hd_div.find('input[name="data_hd_value"]').val();
+            }
+            return params;
+        },
         submit: function(e) {
             e.preventDefault();
 
@@ -301,8 +311,8 @@ define(function(require, module, exports) {
                 ebsNum:this.$ebsNum.val(),
                 sysDataType:this.$sysDataType.val(),
                 salePrice:this.$salePrice.val(),
-                payment:$('#payment').val(),
-                syshd:$('#datahd_value').val(),
+                payment:$('#payment_select').val(),
+                syshd:$('#sys_hd_value').val(),
                 specType:this.$specType.val()
             }
             if(this.$salePrice.attr('lock')==1){
@@ -313,11 +323,7 @@ define(function(require, module, exports) {
             if($("#pageType").val()=='change'){
                 params['businessOrderItemId'] = $("#businessOrderItemId").val();
             }
-            for(var i=0;i<ebsNum;i++){
-                params['dataType'+(i+1)]=$('.dataHdDiv').eq(i).find('select[name="datahdType"]').val();
-                params['dataHd'+(i+1)]=$('.dataHdDiv').eq(i).find('input[name="datahd_value"]').val();
-            }
-			
+            params = this.getDataHd(ebsNum, params);
             var req = $.ajax({
                 url: $('#service_post_form').attr('action'),
                 data: params,
@@ -460,18 +466,14 @@ define(function(require, module, exports) {
                 ebsNum:this.$ebsNum.val(),
                 sysDataType:this.$sysDataType.val(),
                 salePrice:this.$salePrice.val(),
-                payment:$('#payment').val(),
-                syshd:$('#datahd_value').val(),
+                payment:$('#payment_select').val(),
+                syshd:$('#sys_hd_value').val(),
                 specType:this.$specType.val()
             }
             if(! params['os']){
                params['os'] =  params['serviceTag'] == 'hws'? 'windows':'1';
             }
-
-            for(var i=0;i<ebsNum;i++){
-                params['dataType'+(i+1)]=$('.dataHdDiv').eq(i).find('select[name="datahdType"]').val();
-                params['dataHd'+(i+1)]=$('.dataHdDiv').eq(i).find('input[name="datahd_value"]').val();
-            }
+            params = this.getDataHd(ebsNum, params);
             var req = $.ajax({
                 url: baseurl+"business/getitemprice",
                 data:params,
@@ -487,7 +489,8 @@ define(function(require, module, exports) {
                         $('#salePrice').val(data.returnObj.finalPrice);
                     }
                 }else{
-                    bootbox.alert('获取数据失败');
+                    // bootbox.alert('获取数据失败');
+                    console.log('获取数据失败');
                 }
             });
             req.fail(function(error) {});

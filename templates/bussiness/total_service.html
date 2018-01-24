@@ -22,17 +22,18 @@
                 <div class="panel-body">
                     <form action="{{ baseUrl}}business/createresitem" method="POST" class="form-horizontal" id="service_post_form">
                     {% for attr in attr_sort %}
+                    {% set  inputType = productAttr[attr]["inputType"] %}
                     {% set  value_list = productAttr[attr].get("valueList", "") %}
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="">{{ productAttr[attr]["name"] }}</label>
                         <div class="col-sm-10">
-                        {% if productAttr[attr]["inputType"] == "select" %}
+                        {% if inputType == "select" %}
                             <select id="{{ attr }}_select" name="{{ attr }}" class="form-control">
                                 {% for z in value_list %}
                                     <option value="{{z}}">{{value_list[z]["name"]}}</option>
                                 {% end %}
                             </select>
-                        {% elif productAttr[attr]["inputType"] == "button" %}
+                        {% elif inputType == "button" %}
                         {% set unit = productAttr[attr].get("unit", "") %}
                                 {% if productAttr[attr].get("innerAttrValueList", "") %}
                                 {% set inner_value = productAttr[attr]["innerAttrValueList"] %}
@@ -61,16 +62,16 @@
                                     </div>
                                     {% end %}
                                 {% end %}
-                        {% elif productAttr[attr]["inputType"] == "selectInput" %}
+                        {% elif inputType == "selectInput" %}
                             <div class="row {{ attr }}_div" style="display: {% if attr== "data_hd" %}none{% end %}">
-                                <div class="col-sm-4">
+                                <div class="col-sm-2">
                                     <select id="{{ attr }}_select" name="{{ attr }}_select" class="form-control">
                                         {% for k in productAttr[attr]["valueList"] %}
                                             <option value="{{k}}">{{productAttr[attr]["valueList"][k]["name"]}}</option>
                                         {% end %}
                                     </select>
                                 </div>
-                                <div class="input-group col-sm-2" style="bottom: 0px">
+                                <div class="input-group col-sm-1" style="bottom: 0px;float: left">
                                     <input type="{{ productAttr[attr]["inputs"]["type"] }}" class="form-control"
                                            id="{{ attr }}_value" name="{{ attr }}_value"
                                            value="{{ productAttr[attr]["inputs"]["default"] }}">
@@ -78,8 +79,8 @@
                                     <span class="input-group-addon">{{ productAttr[attr]["inputs"]["unit"]}}</span>
                                     {% end %}
                                 </div>
-                                <div class="col-sm-1" style="display: {% if attr!= "data_hd" %}none{% end %}">
-                                    <a href ="#" class="btn" data-type="delebs" >删除</a>
+                                <div class="col-sm-2" style="display: {% if attr!= "data_hd" %}none{% end %}">
+                                    <a href="javascript:" class="btn" data-type="delebs" style="margin-top:9px;">删除</a>
                                 </div>
                             </div>
                             {% if attr == "data_hd" %}
@@ -90,14 +91,23 @@
                                     </div>
                                 </div>
                             {% end %}
-                        {% elif productAttr[attr]["inputType"] == "input" %}
+                        {% elif inputType == "input" %}
                             {% set value = productAttr[attr]["inputs"] %}
-                            <input type="{{ value["type"] }}" class="form-control"
-                                       id="{{ attr }}_value" name="{{ attr }}_value" value="{{ value["default"] }}">
+                            <input type="{{ value["type"] }}" class="form-control col-sm-4"
+                                   id="{{ attr }}" name="{{ attr }}" value="{{ value["default"] }}">
                                 {% if value.get("unit", "") %}
                                 <span class="input-group-addon">{{ value["unit"]}}</span>
                                 {% end %}
-                        {% elif productAttr[attr]["inputType"] == "fixed" %}
+                        {% elif inputType == "sliderInput"%}
+                            {% set value = productAttr[attr]["inputs"] %}
+                            <div class="col-sm-8">
+                                <input type="text" class="col-sm-12 slider-{{ attr }}" data-slider-value="{{ value["default"] }}" value="{{ value["default"] }}">
+                            </div>
+                            <div class="input-group col-sm-2">
+                                <input class="form-control input-{{ attr }}" type="{{ value["type"] }}" id="bw_value" value="{{ value["default"] }}">
+                                <span class="input-group-addon">{{ value["unit"] }}</span>
+                            </div>
+                        {% elif inputType == "fixed" %}
                             {% set fixed = productAttr[attr]["fixed"] %}
                             <p class=""><span class="text-success lead">{{ fixed["value"] }}</span>{{ " "+fixed["unit"] }}</p>
                         {% end %}
@@ -107,9 +117,9 @@
                         <div class="form-group form-actions">
                             {% if pageType=='change' %}
                                 {% if jurisdiction['update'] %}
-                                         <div class="col-sm-2 col-sm-offset-2">
-                                            <input type="submit" class="btn btn-primary btn-lg btn-block" value="修改"/>
-                                            </div>
+                                <div class="col-sm-2 col-sm-offset-2">
+                                    <input type="submit" class="btn btn-primary btn-lg btn-block" value="修改"/>
+                                </div>
                                 {%end%}
                             {% else %}
                                  <div class="col-sm-2 col-sm-offset-2">

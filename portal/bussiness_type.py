@@ -5,8 +5,8 @@ BU = {
             "serviceTag": "VMS",
             "resourceType": "VM",
             "isMaster": "true",
-            "attr_sort": ["zone", "cpu", 'memory', "sys_hd", "data_hd", "net", "operate_sys", "period",
-                          "order_num", "stand_price", "sale_price"],
+            "attr_sort": ["zone", "cpu", 'memory', "sys_hd", "data_hd", "net", "os", "period",
+                          "order_num", "stand_price", "sale_price", "payment"],
             "otherResource": ['EBS', "NETWORK"],
             "productAttr": {
                 "cpu": {
@@ -57,13 +57,19 @@ BU = {
                     "apiUrl": ""
                 },
                 "net": {
-                    "name": u"公网宽带",
-                    "inputType": "select"
+                    "name": u"公网带宽",
+                    "inputType": "sliderInput",
+                    "inputs": {"type": "number", "max": 300, "min": 2, "default": 2, "unit": "M"},
                 },
-                "operate_sys": {
+                "os": {
                     "name": u"操作系统",
                     "inputType": "select",
-                    "valueList": [],
+                    "valueList": {
+                        22: {"name": "Windows 2012 R2 标准中文版 64位", "sys_hd": 40},
+                        26: {"name": "CentOS6.5 64位", "sys_hd": 40},
+                        27: {"name": "CentOS6.7 64位", "sys_hd": 40},
+                        28: {"name": "CentOS7.0 64位", "sys_hd": 40}
+                    },
                 },
                 "period": {
                     "name": u"订购时长",
@@ -75,7 +81,7 @@ BU = {
                 "order_num": {
                     "name": u"申请数量",
                     "inputType": "input",
-                    "inputs": {"type": "number", "max": 100, "min": 1, "default": 15, "unit": ""},
+                    "inputs": {"type": "number", "max": 100, "min": 1, "default": 1, "unit": ""},
                 },
                 "stand_price": {
                     "name": u"标准资费",
@@ -86,8 +92,17 @@ BU = {
                     "name": "销售价格",
                     "inputType": "calculator",
                     "fixed": {"value": "", "unit": "元"},
+                },
+                "payment": {
+                    "name": "出账时间",
+                    "inputType": "select",
+                    "valueList": {
+                        10: {"name": "当月按月出账"},
+                        11: {"name": "次月按月出账"},
+                        12: {"name": "当月一次性出账"},
+                        13: {"name": "次月一次性出账"}
+                    },
                 }
-
             }
         },
         "vms-ebs": {
@@ -95,7 +110,7 @@ BU = {
             "serviceTag": "VMS",
             "resourceType": "EBS",
             "isMaster": "true",
-            "attr_sort": ["zone", "hd"],
+            "attr_sort": ["zone", "sys_hd", "data_hd"],
             "productAttr": {
                 "zone": {
                     "name": u'资源池',
@@ -115,7 +130,7 @@ BU = {
                         "sata": {"name": "普通IO"},
                         "sas": {"name": "高IO"}
                     },
-                    "inputs": {"type": "readonly", "max": 100, "min": 1, "default": 15, "unit": "GB"},
+                    "inputs": {"type": "readonly", "max": 100, "min": 1, "default": 40, "unit": "GB"},
                     "apiUrl": ""
                 },
                 "data_hd": {
@@ -127,11 +142,11 @@ BU = {
                 },
             }
         },
-        "vms-eip": {
+        "vms-network": {
             "name": u"弹性IP",
             "serviceTag": "VMS",
-            "resourceType": "EIP",
-            "attr_sort": ["zone", "hd"],
+            "resourceType": "NETWORK",
+            "attr_sort": ["zone", "vpc", "period", "order_num", "stand_price", "sale_price", "payment"],
             "productAttr": {
                 "zone": {
                         "name": u'资源池',
@@ -151,6 +166,38 @@ BU = {
 
                     }
                 },
+                "period": {
+                    "name": u"订购时长",
+                    "inputType": "selectInput",
+                    "valueList": {"day": {"name": "天"}, "month": {"name": "月"}, "year": {"name": "年"},
+                                  "today": {"name": "制定日期"}},
+                    "inputs": {"type": {"default": "number", "today": "text"}, "default": 1, "unit": ""}
+                },
+                "order_num": {
+                    "name": u"申请数量",
+                    "inputType": "input",
+                    "inputs": {"type": "number", "max": 100, "min": 1, "default": 1, "unit": ""},
+                },
+                "stand_price": {
+                    "name": u"标准资费",
+                    "inputType": "fixed",
+                    "fixed": {"value": 120, "unit": "元"},
+                },
+                "sale_price": {
+                    "name": "销售价格",
+                    "inputType": "calculator",
+                    "fixed": {"value": "", "unit": "元"},
+                },
+                "payment": {
+                    "name": "出账时间",
+                    "inputType": "select",
+                    "valueList": {
+                        10: {"name": "当月按月出账"},
+                        11: {"name": "次月按月出账"},
+                        12: {"name": "当月一次性出账"},
+                        13: {"name": "次月一次性出账"}
+                    },
+                }
             }
         }
 }
