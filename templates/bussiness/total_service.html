@@ -34,9 +34,9 @@
                             </select>
                         {% elif productAttr[attr]["inputType"] == "button" %}
                         {% set unit = productAttr[attr].get("unit", "") %}
-                            <div class="btn-group btn-group-justified">
                                 {% if productAttr[attr].get("innerAttrValueList", "") %}
                                 {% set inner_value = productAttr[attr]["innerAttrValueList"] %}
+                                <div class="btn-group btn-group-justified">
                                     {% for k in value_list %}
                                     <div class="btn-group">
                                         <a class="btn btn-primary btn-lg {% if int(k)==1 %}active{%end%}" data-range="{{ inner_value[k] }}"
@@ -45,35 +45,51 @@
                                         </a>
                                     </div>
                                     {% end %}
+                                </div>
                                 {% elif productAttr[attr].get("innerBy") %}
                                 {% set inner_by =  productAttr[attr]["innerBy"]%}
                                 {% set inner_value = productAttr[inner_by]["innerAttrValueList"] %}
                                     {% for i in inner_value %}
+                                    <div class="btn-group btn-group-justified {% if i!=1 %}hidden{%end%}" data-inner="{{ i }}">
                                     {% for k in inner_value[i] %}
-                                        <div class="btn-group {% if i!=1 %}hidden{%end%}" >
-                                            <a data-type="{{ attr }}" data-value="{{ int(k)*1024 }}" class="btn btn-primary btn-lg  {% if int(k)==1 %}active{%end%}">
-                                                {{ k }} {{ unit }}
-                                            </a>
-                                        </div>
+                                    <div class="btn-group" >
+                                        <a data-type="{{ attr }}" data-value="{{ int(k)*1024 }}" class="btn btn-primary btn-lg  {% if int(k)==1 %}active{%end%}">
+                                            {{ k }} {{ unit }}
+                                        </a>
+                                    </div>
                                     {% end %}
+                                    </div>
                                     {% end %}
                                 {% end %}
-                            </div>
                         {% elif productAttr[attr]["inputType"] == "selectInput" %}
-                            <div class="col-sm-4">
-                                <select id="{{ attr }}_select" name="{{ attr }}_select" class="form-control">
-                                    {% for k in productAttr[attr]["valueList"] %}
-                                        <option value="{{k}}">{{productAttr[attr]["valueList"][k]["name"]}}</option>
+                            <div class="row {{ attr }}_div" style="display: {% if attr== "data_hd" %}none{% end %}">
+                                <div class="col-sm-4">
+                                    <select id="{{ attr }}_select" name="{{ attr }}_select" class="form-control">
+                                        {% for k in productAttr[attr]["valueList"] %}
+                                            <option value="{{k}}">{{productAttr[attr]["valueList"][k]["name"]}}</option>
+                                        {% end %}
+                                    </select>
+                                </div>
+                                <div class="input-group col-sm-2" style="bottom: 0px">
+                                    <input type="{{ productAttr[attr]["inputs"]["type"] }}" class="form-control"
+                                           id="{{ attr }}_value" name="{{ attr }}_value"
+                                           value="{{ productAttr[attr]["inputs"]["default"] }}">
+                                    {% if productAttr[attr]["inputs"].get("unit", "") %}
+                                    <span class="input-group-addon">{{ productAttr[attr]["inputs"]["unit"]}}</span>
                                     {% end %}
-                                </select>
+                                </div>
+                                <div class="col-sm-1" style="display: {% if attr!= "data_hd" %}none{% end %}">
+                                    <a href ="#" class="btn" data-type="delebs" >删除</a>
+                                </div>
                             </div>
-                            <div class="input-group col-sm-4" style="bottom: 0px">
-                                <input type="{{ productAttr[attr]["inputs"]["type"] }}" class="form-control"
-                                       id="{{ attr }}_value" name="{{ attr }}_value" value="{{ productAttr[attr]["inputs"]["default"] }}">
-                                {% if productAttr[attr]["inputs"].get("unit", "") %}
-                                <span class="input-group-addon">{{ productAttr[attr]["inputs"]["unit"]}}</span>
-                                {% end %}
-                            </div>
+                            {% if attr == "data_hd" %}
+                                <input type="hidden" value="0" name="ebsNum" id="ebsNum">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <a href ="#" class="btn" id="addebs" ><i class="icon-plus"></i><span>增加一块数据盘</span></a>
+                                    </div>
+                                </div>
+                            {% end %}
                         {% elif productAttr[attr]["inputType"] == "input" %}
                             {% set value = productAttr[attr]["inputs"] %}
                             <input type="{{ value["type"] }}" class="form-control"

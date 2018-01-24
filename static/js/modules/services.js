@@ -175,16 +175,17 @@ define(function(require, module, exports) {
         },
         addEbsDiv:function(){
             var ebsNum=parseInt(this.$ebsNum.val());
+            var data_hd_div = $('.data_hd_div');
             if(ebsNum>=5){
                 bootbox.alert('最多只能添加5块数据盘');
                 return false;
             }
             if(ebsNum==0){
-                $('.dataHdDiv').find('input[name="datahd_value"]').val(30);
-                $('.dataHdDiv').show();
+                data_hd_div.find('input[name="data_hd_value"]').val(30);
+                data_hd_div.show();
             }else{
-                var obj=$('.dataHdDiv').eq(0).clone(true);
-                obj.find('input[name="datahd_value"]').val(30);
+                var obj=data_hd_div.eq(0).clone(true);
+                obj.find('input[name="data_hd_value"]').val(30);
                 $(this.$addebs).parents('.row').before(obj);
             }
             ebsNum++;
@@ -198,9 +199,9 @@ define(function(require, module, exports) {
                 return false;
             }
             if(ebsNum==1){
-                $('.dataHdDiv').hide();
+                $('.data_hd_div').hide();
             }else{
-                $target.parents('.dataHdDiv').remove();
+                $target.parents('.data_hd_div').remove();
             }
             ebsNum--;
             this.$ebsNum.val(ebsNum);
@@ -514,8 +515,18 @@ define(function(require, module, exports) {
             $target.addClass('active');
             this.selected_cpu = $target.data('value');
             console.log("123444====", range, typeof range);
-            this.changeMemoryRange(range);
+            this.changeMemoryLine(this.selected_cpu);
+            // this.changeMemoryRange(range);
             this.getCloudPrice(true);
+        },
+        changeMemoryLine: function(inner){
+            var memory_line = this.$memory.parents(".btn-group-justified");
+            var inner_value = memory_line.not(".hidden").data("inner");
+            if(inner === inner_value){
+                return;
+            }
+            memory_line.not(".hidden").addClass("hidden");
+            memory_line.filter("[data-inner="+ inner +"]").removeClass("hidden");
         },
         changeMemoryRange: function(range) {
             // var min = range.split(',')[0],
@@ -530,6 +541,7 @@ define(function(require, module, exports) {
                     $validMemories.push(memory);
                 }
             });
+            console.log("$validMemories===", $validMemories);
             $validMemories
                 .parent()
                 .removeClass('hidden')
@@ -537,6 +549,7 @@ define(function(require, module, exports) {
                 .removeClass('hidden active')
                 .eq(0).addClass('active');
             this.selected_memory = $validMemories.eq(0).data('value');
+            console.log("memory===", this.selected_memory);
             this.$memory
                 .not($validMemories)
                 .parent()
