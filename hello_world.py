@@ -54,7 +54,8 @@ class BillHandler(BaseHandler):
         resourceType = self.get_argument('resourceType', default='vm', strip=True)
         service_data_new = BU[serviceTag + "-" + resourceType]
         html_data = dict(html_data, **service_data_new)
-        self.render("bussiness/total_service.html", **html_data)
+        # self.render("bussiness/total_service.html", **html_data)
+        self.render("bussiness/total_service_block.html", **html_data)
 
 
 class OrderInfoHandler(BaseHandler):

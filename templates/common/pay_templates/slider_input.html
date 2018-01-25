@@ -1,0 +1,8 @@
+{% set value = productAttr[attr]["inputs"] %}
+<div class="col-sm-8">
+    <input type="text" class="col-sm-12 slider-{{ attr }}" data-slider-value="{{ value["default"] }}" value="{{ value["default"] }}">
+</div>
+<div class="input-group col-sm-2">
+    <input class="form-control input-{{ attr }}" type="{{ value["type"] }}" id="bw_value" value="{{ value["default"] }}">
+    <span class="input-group-addon">{{ value["unit"] }}</span>
+</div>

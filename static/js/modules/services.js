@@ -379,7 +379,8 @@ define(function(require, module, exports) {
                     }
                     thisOs.trigger('change');
                 }else{
-                    bootbox.alert('获取操作系统数据失败');
+                    // bootbox.alert('获取操作系统数据失败');
+                    console.log('获取操作系统数据失败');
                 }
             });
             req.fail(function(error) {bootbox.alert('获取操作系统数据失败');});
@@ -412,7 +413,8 @@ define(function(require, module, exports) {
                         thisVpc.trigger('change');
                     }
                 }else{
-                    bootbox.alert('vpc获取数据失败');
+                    // bootbox.alert('vpc获取数据失败');
+                    console.log('vpc获取数据失败');
                 }
             });
             vpcreq.fail(function(error) {bootbox.alert('vpc获取数据失败');});

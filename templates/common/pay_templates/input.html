@@ -1,0 +1,6 @@
+ {% set value = productAttr[attr]["inputs"] %}
+    <input type="{{ value["type"] }}" class="form-control col-sm-4"
+           id="{{ attr }}" name="{{ attr }}" value="{{ value["default"] }}">
+    {% if value.get("unit", "") %}
+    <span class="input-group-addon">{{ value["unit"]}}</span>
+{% end %}

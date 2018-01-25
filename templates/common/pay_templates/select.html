@@ -1,0 +1,5 @@
+<select id="{{ attr }}_select" name="{{ attr }}" class="form-control">
+    {% for z in value_list %}
+        <option value="{{z}}">{{value_list[z]["name"]}}</option>
+    {% end %}
+</select>

@@ -1,0 +1,75 @@
+<div class="col-sm-10" id="{{ attr }}">
+{% set unit = productAttr[attr].get("unit", "") %}
+{% if productAttr[attr].get("innerAttrValueList", "") %}
+    {% set inner_value = productAttr[attr]["innerAttrValueList"] %}
+    <div class="btn-group btn-group-justified">
+        {% for k in value_list %}
+        <div class="btn-group">
+            <a class="btn btn-primary btn-lg {% if int(k)==1 %}active{%end%}" data-range="{{ inner_value[k] }}"
+               data-type="{{ attr }}" data-value="{{ k }}">
+                {{ k }}{{ unit }}
+            </a>
+        </div>
+        {% end %}
+    </div>
+{% elif productAttr[attr].get("innerBy") %}
+    {% set inner_by =  productAttr[attr]["innerBy"]%}
+    {% set inner_value = productAttr[inner_by]["innerAttrValueList"] %}
+        {% for i in inner_value %}
+        <div class="btn-group btn-group-justified {% if i!=1 %}hidden{%end%}" data-inner="{{ i }}">
+        {% for k in inner_value[i] %}
+        <div class="btn-group" >
+            <a data-type="{{ attr }}" data-value="{{ int(k)*1024 }}" class="btn btn-primary btn-lg  {% if int(k)==1 %}active{%end%}">
+                {{ k }} {{ unit }}
+            </a>
+        </div>
+        {% end %}
+        </div>
+    {% end %}
+{% end %}
+</div>
+<script>
+    define(function(require, module, exports) {
+        var $ = require('jquery'),
+            slider = require('bootstrap-slider');
+        var bootbox = require('bootbox');
+        var initServicesFlage = true;
+        var initData;
+        var Button_{{ attr }} = function ($("#{{ attr }}"), data) {
+            this.${{ attr }} = this.$el.find('a[data-type={{ attr }}]');
+            this.init()
+        };
+        Button_{{ attr }}.prototype = {
+            constructor: Button_{{ attr }},
+            init: function(e){
+                this.${{ attr }}.on('click', $.proxy(this.apply{{ attr }}, this));
+            },
+            apply{{ attr }}: function(e) {
+                e.preventDefault();
+                var $target = $(e.currentTarget);
+                {#var range = $target.data('range');#}
+                var ${{ attr }} = $target.parent().siblings().children();
+                if ($target.hasClass('active')) {
+                    return;
+                }
+                ${{ attr }}.removeClass('active');
+                $target.addClass('active');
+                this.selected_cpu = $target.data('value');
+                console.log("value====");
+                // this.changeMemoryRange(range);
+                this.changeMemoryLine(this.selected_cpu);
+                this.getCloudPrice(true);
+            },
+            changeMemoryLine: function(inner){
+                var memory_line = this.$memory.parents(".btn-group-justified");
+                var inner_value = memory_line.not(".hidden").data("inner");
+                if(inner === inner_value){
+                    return;
+                }
+                memory_line.not(".hidden").addClass("hidden");
+                memory_line.filter("[data-inner="+ inner +"]").removeClass("hidden");
+            },
+        }
+
+    })
+</script>
