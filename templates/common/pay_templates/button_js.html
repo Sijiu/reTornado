@@ -1,0 +1,36 @@
+var Button_{{ attr }} = {
+    init: function(){
+        $("#{{ attr }}").on("click", 'a[data-type={{ attr }}]', Button_{{ attr }}.apply_cpu);
+        {% if productAttr[attr].get("inner_to") %}
+        {% set inner_to = productAttr[attr]["inner_to"] %}
+        inner_to = $("#{{ inner_to }}").find('a[data-type={{ inner_to }}]');
+        {% end %}
+    },
+    apply_cpu: function(e) {
+        e.preventDefault();
+        var $target = $(e.currentTarget);
+        var ${{ attr }} = $target.parent().siblings().children();
+        if ($target.hasClass('active')) {
+            return;
+        }
+        ${{ attr }}.removeClass('active');
+        $target.addClass('active');
+        PayItem.{{ attr }} = $target.data('value');
+        console.log("value====", this, e);
+        {% if productAttr[attr].get("innerAttrValueList", "") %}
+        console.log("selected_{{ attr }}", PayItem.{{ attr }})
+            Button_{{ attr }}.changeMemoryLine(PayItem.{{ attr }});
+        {% end %}
+        {#this.getCloudPrice(true);#}
+    },
+    changeMemoryLine: function(inner){
+        var memory_line = inner_to.parents(".btn-group-justified");
+        var inner_value = memory_line.not(".hidden").data("inner");
+        if(inner === inner_value){
+            return;
+        }
+        memory_line.not(".hidden").addClass("hidden");
+        memory_line.filter("[data-inner="+ inner +"]").removeClass("hidden");
+    }
+};
+Button_{{ attr }}.init();
