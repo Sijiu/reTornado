@@ -102,8 +102,8 @@ def main():
 
     ],
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
-        static_path=os.path.join(os.path.dirname(__file__), "static")
-        # debug=True
+        static_path=os.path.join(os.path.dirname(__file__), "static"),
+        debug=True
     )
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(options.port)

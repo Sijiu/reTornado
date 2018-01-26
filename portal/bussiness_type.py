@@ -15,7 +15,7 @@ BU = {
                         "valueList": [1, 2, 4, 8, 16, 32],
                         "unit": u"核",
                         "apiUrl": "",
-                        "innerToAttr": "memory",
+                        "inner_to": "memory",
                         "innerAttrValueList": {1: [1, 2, 4, 8], 2: [2, 4, 8, 16], 4: [4, 8, 16, 32], 8: [8, 16, 32, 64],
                                                16: [16, 32, 64], 32: [32, 64]
                                                }
