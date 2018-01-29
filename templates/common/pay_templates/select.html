@@ -3,3 +3,80 @@
         <option value="{{z}}">{{value_list[z]["name"]}}</option>
     {% end %}
 </select>
+<script>
+    seajs.use(['jquery','modules/services_block','modules/calender', 'bootstrap-slider', 'bootbox', 'modules/pay'],
+        function($,Services, calender, slider, bootbox, pay){
+        var Select ={
+            init: function(){},
+            changeZone:function(e){
+            {#    e.preventDefault();#}
+            {#    var thisOs=this.$os;#}
+            {#    var thisVpc=this.$vpc;#}
+            {#    var thisVlan=this.$vlan;#}
+            {#    var thisVpcList=this.$vpcList;#}
+            {#    var initFlag = initServicesFlage;#}
+            {#    var req = $.ajax({#}
+            {#        url: baseurl+"business/getoslist",#}
+            {#        data: {'zoneId':this.$zone.val(),'serviceTag':this.$serviceTag.val()},#}
+            {#        type: 'POST',#}
+            {#        dataType:'json'#}
+            {#    });#}
+            {#    req.done(function(data) {#}
+            {#        if(data.status=="1"){#}
+            {#            thisOs.empty();#}
+            {#            for(k in data.osList){#}
+            {#                thisOs.append("<option value='"+k+"' syshd='"+data.osList[k].syshd+"' >"+data.osList[k].text+"</option>")#}
+            {#            }#}
+            {#            if(initFlag && !$.isEmptyObject(initData) && initData['os']){#}
+            {#                 thisOs.find("option").each(function () {#}
+            {#                    if( $(this).html()== initData['os']){#}
+            {#                        thisOs.val($(this).attr('value'));#}
+            {#                    }#}
+            {#                });#}
+            {#            }#}
+            {#            thisOs.trigger('change');#}
+            {#        }else{#}
+            {#            // bootbox.alert('获取操作系统数据失败');#}
+            {#            console.log('获取操作系统数据失败');#}
+            {#        }#}
+            {#    });#}
+            {#    req.fail(function(error) {bootbox.alert('获取操作系统数据失败');});#}
+            {#    var vpcreq = $.ajax({#}
+            {#        url: baseurl+"business/getvpclist",#}
+            {#        data: {'zoneId':this.$zone.val(),accountId:this.$accountId.val(),userId:this.$userId.val()},#}
+            {#        type: 'POST',#}
+            {#        dataType:'json'#}
+            {#    });#}
+            {#    vpcreq.done(function(data) {#}
+            {#        if(data.status=="1"){#}
+            {#            thisVpcList.val(JSON.stringify(data.vpcList))#}
+            {#            thisVpc.empty();#}
+            {##}
+            {#            if ($.isEmptyObject(data.vpcList)){#}
+            {#                thisVpc.parents('.form-group').hide();#}
+            {#            }else{#}
+            {#                thisVpc.parents('.form-group').show();#}
+            {#                for(k in data.vpcList){#}
+            {#                    thisVpc.append("<option value='"+k+"'>"+data.vpcList[k].name+"</option>")#}
+            {##}
+            {#                }#}
+            {#                if( !$.isEmptyObject(initData)&&initData['vpcID']) {#}
+            {#                    thisVpc.find("option").each(function () {#}
+            {#                        if ($(this).attr('value') == initData['vpcID']) {#}
+            {#                            thisVpc.val($(this).attr('value'));#}
+            {#                        }#}
+            {#                    });#}
+            {#                }#}
+            {#                thisVpc.trigger('change');#}
+            {#            }#}
+            {#        }else{#}
+            {#            // bootbox.alert('vpc获取数据失败');#}
+            {#            console.log('vpc获取数据失败');#}
+            {#        }#}
+            {#    });#}
+            {#    vpcreq.fail(function(error) {bootbox.alert('vpc获取数据失败');});#}
+             },
+        };
+        Select.init();
+    });
+</script>

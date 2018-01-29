@@ -30,15 +30,6 @@
      seajs.use(['jquery','modules/services_block','modules/calender', 'bootstrap-slider', 'bootbox', 'modules/pay'],
         function($,Services, calender, slider, bootbox, pay){
         var $el = $('.form-horizontal');
-        PayItem = {
-            initData: $.parseJSON('{% raw initData %}'),
-            serviceTag: $el.find('#serviceTag'),
-            age: 55,
-            sex: "male"
-        };
-        pay.index = "index";
-        pay.age = 100;
-        console.log("----", pay);
         var Button_{{ attr }} = {
             init: function(){
                 $("#{{ attr }}").on("click", 'a[data-type={{ attr }}]', Button_{{ attr }}.apply_cpu);
@@ -56,11 +47,11 @@
                 }
                 ${{ attr }}.removeClass('active');
                 $target.addClass('active');
-                PayItem.{{ attr }} = $target.data('value');
+                pay.params.{{ attr }} = $target.data('value');
                 console.log("value====", this, e);
                 {% if productAttr[attr].get("innerAttrValueList", "") %}
-                console.log("selected_{{ attr }}", PayItem.{{ attr }})
-                    Button_{{ attr }}.changeMemoryLine(PayItem.{{ attr }});
+                console.log("selected_{{ attr }}", pay.params.{{ attr }});
+                    Button_{{ attr }}.changeMemoryLine(pay.params.{{ attr }});
                 {% end %}
                 {#this.getCloudPrice(true);#}
             },

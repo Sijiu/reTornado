@@ -20,7 +20,7 @@
                     <h3 class="panel-title">创建{{ name }}</h3>
                 </div>
                 <div class="panel-body">
-                    <form action="{{ baseUrl}}business/createresitem" method="POST" class="form-horizontal" id="service_post_form">
+                    <div action="{{ baseUrl}}business/createresitem" method="POST" class="form-horizontal" id="service_post_form">
                     {% for attr in attr_sort %}
                     {% set  inputType = productAttr[attr]["inputType"] %}
                     {% set  value_list = productAttr[attr].get("valueList", "") %}
@@ -62,7 +62,7 @@
 			            <input id="defaultCpu" type="hidden" value="1">
                         <input id="defaultMem" type="hidden" value="1024">
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,151 +72,11 @@
     seajs.use(['jquery','modules/services_block','modules/calender', 'bootstrap-slider', 'bootbox', "modules/pay"],
         function($,Services,calender, slider, bootbox, pay) {
         var $el = $('.form-horizontal');
-        PayItem = {
-            initData: $.parseJSON('{% raw initData %}'),
-            serviceTag: $el.find('#serviceTag'),
-            age: 66,
-            com: "ctyun"
-        }
-        pay.ages = 10;
-        pay.diff = "same";
-        console.log("self===", pay, this);
-        {#var $el = $('.form-horizontal')#}
-        {#new Services($el, $.parseJSON('{% raw initData %}'));#}
+        var initData = $.parseJSON('{% raw initData %}');
+        pay.local.serviceTag = $el.find('#serviceTag').val();
+        console.log(initData, "initData")
         var sCalendar = new calender();
         $('#period_day').on('click',function(e){new calender().show(this)});
-        {% for attr in attr_sort %}
-        {% set  inputType = productAttr[attr]["inputType"] %}
-        {% set  value_list = productAttr[attr].get("valueList", "") %}
-        {% if inputType == "select" %}
-{#                {% include '../common/pay_templates/select.html' %}#}
-        {% elif inputType == "button" %}
-            {% include '../common/pay_templates/button_js.html' %}
-        {% elif inputType == "selectInput" %}
-            var SelectInput_{{ attr }} = {
-            {{ attr }}_type : $("#{{ attr }}").find('#{{ attr }}_select'),
-            {{ attr }}_value : $("#{{ attr }}").find('#{{ attr }}_value'),
-            ebsNum: $("#{{ attr }}").find('#ebsNum'),
-            addebs: $("#{{ attr }}").find('#addebs'),
-            delebs: $("#{{ attr }}").find('a[data-type=delebs]'),
-            init: function(){
-                {#this.$ebsNum=this.$el.find('#ebsNum');#}
-                {#this.$addebs=this.$el.find('#addebs');#}
-                {#this.$delebs = this.$el.find('a[data-type=delebs]');#}
-                this.addebs.on('click', this.addEbsDiv);
-                this.delebs.on('click', this.delEbsDiv);
-                {#this.{{ attr }}_type.on('change', this.getCloudPrice);#}
-                this.{{ attr }}_value.on('change', this.chageDataHdValue);
-            },
-            addEbsDiv:function(){
-                var ebsNum=parseInt(SelectInput_{{ attr }}.ebsNum.val());
-                var data_hd_div = $('.data_hd_div');
-                if(ebsNum>=5){
-                    bootbox.alert('最多只能添加5块数据盘');
-                    return false;
-                }
-                if(ebsNum==0){
-                    data_hd_div.find('input[name="data_hd_value"]').val(30);
-                    data_hd_div.show();
-                }else{
-                    var obj=data_hd_div.eq(0).clone(true);
-                    obj.find('input[name="{{ attr }}_value"]').val(30);
-                    $(SelectInput_{{ attr }}.addebs).parents('.row').before(obj);
-                }
-                ebsNum++;
-                SelectInput_{{ attr }}.ebsNum.val(ebsNum);
-                {#this.getCloudPrice(true);#}
-            },
-            chageDataHdValue:function(e){
-                if(PayItem.serviceTag.val()=='vms'){
-                    var numMax =2000;
-                    var step=10;
-                }else{
-                    var numMax =30000;
-                    var step=1;
-                }
-                    var numMin =10;
-                    var $target = $(e.currentTarget);
-                    var num=$target.val();
-                    num=num.replace(/[^0-9]/g,'');
-                    num=parseInt(num);
-                    $target.val()
-                if(num >numMax){
-                    $target.val(numMax);
-                }else if(num < numMin){
-                    $target.val(numMin);
-                }else{
-                    num =  Math.floor(num /step)*step;
-                    $target.val(num);
-                }
-                {#this.getCloudPrice(true);#}
-                },
-            delEbsDiv:function(e){
-                var ebsNum=parseInt(SelectInput_{{ attr }}.ebsNum.val());
-                var $target = $(e.currentTarget);
-                if(ebsNum<=0){
-                    return false;
-                }
-                if(ebsNum==1){
-                    $('.data_hd_div').hide();
-                }else{
-                    $target.parents('.data_hd_div').remove();
-                }
-                ebsNum--;
-                SelectInput_{{ attr }}.ebsNum.val(ebsNum);
-                {#this.getCloudPrice(true);#}
-            },
-            };
-            SelectInput_{{ attr }}.init();
-        {% elif inputType == "input" %}
-{#                 {% include '../common/pay_templates/input.html' %}#}
-        {% elif inputType == "sliderInput"%}
-            var Slider = {
-                {{ attr }}_slider:$("#{{ attr }}").find(('input.slider-{{ attr }}')),
-                {{ attr }}_input: $("#{{ attr }}").find(('input.input-{{ attr }}')),
-                init: function(){
-                    this.renderSlider();
-                    this.{{ attr }}_input.on('change', $.proxy(this.applyValueToSlider, this));
-                },
-                renderSlider: function() {
-                    var self = this;
-                    Slider.{{ attr }}_slider.slider({
-                        min: 0,
-                        max: 300,
-                        step: 1,
-                        tooltip: 'always',
-                        formater: function(v) {
-                            return v + ' Mbps';
-                        }
-                    }).on('slideStop', function() {
-                        self.applySliderValue(Slider.{{ attr }}_slider.data('slider').getValue(), this);
-                    })
-                },
-                applySliderValue: function(value, obj) {
-                    var val = isNaN(parseInt(value))?0:parseInt(value);
-                    if ($(obj).hasClass('slider-{{ attr }}') || $(obj).hasClass('input-{{ attr }}')) {
-                        Slider.{{ attr }}_slider.slider('setValue', val);
-                        Slider.{{ attr }}_input.val(value);
-                    }
-                    {#this.getCloudPrice(true);#}
-                },
-                applyValueToSlider: function(e) {
-                    var $target = $(e.currentTarget);
-                    var val = isNaN(parseInt($target.val().replace(/[^\d]/, ''))) ? 0 : parseInt($target.val().replace(/[^\d]/, ''));
-                    $target.val(val);
-                    if ($target.hasClass('input-net')) {
-                        if ($target.val() > 300) {
-                            $target.val(300);
-                        }
-                        this.applySliderValue($target.val(), $target);
-                    }
-                }
-            };
-            Slider.init();
-        {% elif inputType == "fixed" %}
-{#                {% include '../common/pay_templates/fixed.html' %}#}
-        {% end %}
-        {% end %}
     })
 </script>
 {% include '../common/footer.html' %}

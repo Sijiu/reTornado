@@ -5,7 +5,7 @@ BU = {
             "serviceTag": "VMS",
             "resourceType": "VM",
             "isMaster": "true",
-            "attr_sort": ["zone", "cpu", 'memory', "sys_hd", "data_hd", "net", "os", "period",
+            "attr_sort": ["zone", "cpu", 'memory', "sys_hd", "data_hd", "net", "os", "periods",
                           "order_num", "stand_price", "sale_price", "payment"],
             "otherResource": ['EBS', "NETWORK"],
             "productAttr": {
@@ -71,7 +71,7 @@ BU = {
                         28: {"name": "CentOS7.0 64位", "sys_hd": 40}
                     },
                 },
-                "period": {
+                "periods": {
                     "name": u"订购时长",
                     "inputType": "selectInput",
                     "valueList": {"day": {"name": "天"}, "month": {"name": "月"}, "year": {"name": "年"},
@@ -146,7 +146,7 @@ BU = {
             "name": u"弹性IP",
             "serviceTag": "VMS",
             "resourceType": "NETWORK",
-            "attr_sort": ["zone", "vpc", "period", "order_num", "stand_price", "sale_price", "payment"],
+            "attr_sort": ["zone", "vpc", "periods", "order_num", "stand_price", "sale_price", "payment"],
             "productAttr": {
                 "zone": {
                         "name": u'资源池',
@@ -166,7 +166,7 @@ BU = {
 
                     }
                 },
-                "period": {
+                "periods": {
                     "name": u"订购时长",
                     "inputType": "selectInput",
                     "valueList": {"day": {"name": "天"}, "month": {"name": "月"}, "year": {"name": "年"},

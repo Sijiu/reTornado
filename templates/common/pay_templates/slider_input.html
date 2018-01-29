@@ -6,3 +6,52 @@
     <input class="form-control input-{{ attr }}" type="{{ value["type"] }}" id="bw_value" value="{{ value["default"] }}">
     <span class="input-group-addon">{{ value["unit"] }}</span>
 </div>
+<script>
+     seajs.use(['jquery','modules/services_block','modules/calender', 'bootstrap-slider', 'bootbox', 'modules/pay'],
+        function($,Services, calender, slider, bootbox, pay){
+        var $el = $('.form-horizontal');
+        pay.params.slider_input = "SliderInput";
+        var Slider = {
+                {{ attr }}_slider:$("#{{ attr }}").find(('input.slider-{{ attr }}')),
+                {{ attr }}_input: $("#{{ attr }}").find(('input.input-{{ attr }}')),
+                init: function(){
+                    this.renderSlider();
+                    this.{{ attr }}_input.on('change', $.proxy(this.applyValueToSlider, this));
+                },
+                renderSlider: function() {
+                    var self = this;
+                    Slider.{{ attr }}_slider.slider({
+                        min: 0,
+                        max: 300,
+                        step: 1,
+                        tooltip: 'always',
+                        formater: function(v) {
+                            return v + ' Mbps';
+                        }
+                    }).on('slideStop', function() {
+                        self.applySliderValue(Slider.{{ attr }}_slider.data('slider').getValue(), this);
+                    })
+                },
+                applySliderValue: function(value, obj) {
+                    var val = isNaN(parseInt(value))?0:parseInt(value);
+                    if ($(obj).hasClass('slider-{{ attr }}') || $(obj).hasClass('input-{{ attr }}')) {
+                        Slider.{{ attr }}_slider.slider('setValue', val);
+                        Slider.{{ attr }}_input.val(value);
+                    }
+                    {#this.getCloudPrice(true);#}
+                },
+                applyValueToSlider: function(e) {
+                    var $target = $(e.currentTarget);
+                    var val = isNaN(parseInt($target.val().replace(/[^\d]/, ''))) ? 0 : parseInt($target.val().replace(/[^\d]/, ''));
+                    $target.val(val);
+                    if ($target.hasClass('input-net')) {
+                        if ($target.val() > 300) {
+                            $target.val(300);
+                        }
+                        this.applySliderValue($target.val(), $target);
+                    }
+                }
+            };
+            Slider.init();
+        });
+</script>

@@ -1,12 +1,12 @@
 <div class="row {{ attr }}_div" style="display: {% if attr== "data_hd" %}none{% end %}">
-    <div class="col-sm-2">
+    <div class="col-sm-4">
         <select id="{{ attr }}_select" name="{{ attr }}_select" class="form-control">
             {% for k in productAttr[attr]["valueList"] %}
                 <option value="{{k}}">{{productAttr[attr]["valueList"][k]["name"]}}</option>
             {% end %}
         </select>
     </div>
-    <div class="input-group col-sm-1" style="bottom: 0px;float: left">
+    <div class="input-group col-sm-4" style="bottom: 0;float: left">
         <input type="{{ productAttr[attr]["inputs"]["type"] }}" class="form-control"
                id="{{ attr }}_value" name="{{ attr }}_value"
                value="{{ productAttr[attr]["inputs"]["default"] }}">
@@ -27,5 +27,101 @@
     </div>
 {% end %}
 <script>
+     seajs.use(['jquery','modules/services_block','modules/calender', 'bootstrap-slider', 'bootbox', 'modules/pay'],
+        function($,Services, calender, slider, bootbox, pay){
+        var SelectInput_{{ attr }} = {
+            self : this,
+            {{ attr }}_type : $("#{{ attr }}").find('#{{ attr }}_select'),
+            {{ attr }}_value : $("#{{ attr }}").find('#{{ attr }}_value'),
+            $ebsNum: $("#{{ attr }}").find('#ebsNum'),
+            addebs: $("#{{ attr }}").find('#addebs'),
+            delebs: $("#{{ attr }}").find('a[data-type=delebs]'),
+            init: function(){
+                {% if attr == "sys_hd" %}
+                    pay.params.{{ attr }}_type = this.{{ attr }}_type.val();
+                    pay.params.{{ attr }}_value = this.{{ attr }}_value.val();
+                {% end %}
+                this.addebs.on('click', this.addEbsDiv);
+                this.delebs.on('click', this.delEbsDiv);
+                this.{{ attr }}_type.on('change', this.getHDType);
+                this.{{ attr }}_value.on('change', this.chageDataHdTypeValue);
+            },
+            addEbsDiv:function(){
+                var ebsNum=parseInt(SelectInput_{{ attr }}.$ebsNum.val());
+                var data_hd_div = $('.{{ attr }}_div');
+                pay.params.select_input = "SelectInput";
+                if(ebsNum>=5){
+                    bootbox.alert('最多只能添加5块数据盘');
+                    return false;
+                }
+                if(ebsNum === 0){
+                    data_hd_div.find('input[name="data_hd_value"]').val(30);
+                    data_hd_div.show();
+                }else{
+                    var obj=data_hd_div.eq(0).clone(true);
+                    obj.find('input[name="{{ attr }}_value"]').val(30);
+                    $(SelectInput_{{ attr }}.addebs).parents('.row').before(obj);
+                }
+                ebsNum++;
+                SelectInput_{{ attr }}.$ebsNum.val(ebsNum);
+                SelectInput_{{ attr }}.chageDataHdTypeValue();
+                {#this.getCloudPrice(true);#}
+            },
+            getHDType: function(){
+                pay.params.{{ attr }}_type = SelectInput_{{ attr }}.{{ attr }}_type.val();
+            },
+            chageDataHdTypeValue:function(){
+                if(pay.local.serviceTag ==='vms'){
+                    var numMax =2000;
+                    var step=10;
+                }else{
+                    var numMax =30000;
+                    var step=1;
+                }
+                    var numMin =10;
+                    var $target = SelectInput_{{ attr }}.{{ attr }}_value;
+                    var num=$target.val();
+                    num=num.replace(/[^0-9]/g,'');
+                    num=parseInt(num);
+                    $target.val();
+                if(num >numMax){
+                    $target.val(numMax);
+                }else if(num < numMin){
+                    $target.val(numMin);
+                }else{
+                    num =  Math.floor(num /step)*step;
+                    $target.val(num);
+                }
+                pay.params = SelectInput_{{ attr }}.getHdValue(SelectInput_{{ attr }}.$ebsNum.val(), pay.params);
+                {#this.getCloudPrice(true);#}
+            },
+            delEbsDiv:function(e){
+                var ebsNum=parseInt(SelectInput_{{ attr }}.$ebsNum.val());
+                var $target = $(e.currentTarget);
+                if(ebsNum<=0){
+                    return false;
+                }
+                if(ebsNum==1){
+                    $('.data_hd_div').hide();
+                }else{
+                    $target.parents('.data_hd_div').remove();
+                }
+                ebsNum--;
+                SelectInput_{{ attr }}.$ebsNum.val(ebsNum);
+                SelectInput_{{ attr }}.chageDataHdTypeValue();
+                {#this.getCloudPrice(true);#}
+            },
+            getHdValue: function(ebsNum, params){
+                for(var i=0;i<ebsNum;i++){
+                    var hd_div = $('.{{ attr }}_div').eq(i);
+                    params['{{ attr }}_type'+(i+1)]=hd_div.find('select[name="{{ attr }}_select"]').val();
+                    params['{{ attr }}_value'+(i+1)]=hd_div.find('input[name="{{ attr }}_value"]').val();
+                }
+                console.log(params);
+                return params;
+            },
+        };
+            SelectInput_{{ attr }}.init();
+    });
 
 </script>

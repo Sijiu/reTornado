@@ -13,6 +13,7 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+import json
 
 import tornado.httpserver
 import tornado.ioloop
@@ -48,7 +49,7 @@ class BillHandler(BaseHandler):
         html_data = {'baseUrl': "http://127.0.0.1:8888/",
                      "pageType": "add",
                      "businessOrderId": "xxx",
-                     "initData": {}
+                     "initData": json.dumps({'hello': 'test'})
                      }
         serviceTag = self.get_argument('serviceTag', default='vms', strip=True)
         resourceType = self.get_argument('resourceType', default='vm', strip=True)
