@@ -37,6 +37,7 @@
                 {% set inner_to = productAttr[attr]["inner_to"] %}
                 inner_to = $("#{{ inner_to }}").find('a[data-type={{ inner_to }}]');
                 {% end %}
+                pay.params.{{ attr }} = 1;
             },
             apply_cpu: function(e) {
                 e.preventDefault();
@@ -48,7 +49,6 @@
                 ${{ attr }}.removeClass('active');
                 $target.addClass('active');
                 pay.params.{{ attr }} = $target.data('value');
-                console.log("value====", this, e);
                 {% if productAttr[attr].get("innerAttrValueList", "") %}
                 console.log("selected_{{ attr }}", pay.params.{{ attr }});
                     Button_{{ attr }}.changeMemoryLine(pay.params.{{ attr }});

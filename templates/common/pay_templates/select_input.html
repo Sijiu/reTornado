@@ -37,7 +37,7 @@
             addebs: $("#{{ attr }}").find('#addebs'),
             delebs: $("#{{ attr }}").find('a[data-type=delebs]'),
             init: function(){
-                {% if attr == "sys_hd" %}
+                {% if attr != "data_hd" %}
                     pay.params.{{ attr }}_type = this.{{ attr }}_type.val();
                     pay.params.{{ attr }}_value = this.{{ attr }}_value.val();
                 {% end %}
@@ -101,14 +101,13 @@
                 if(ebsNum<=0){
                     return false;
                 }
-                if(ebsNum==1){
+                if(ebsNum===1){
                     $('.data_hd_div').hide();
                 }else{
                     $target.parents('.data_hd_div').remove();
                 }
                 ebsNum--;
                 SelectInput_{{ attr }}.$ebsNum.val(ebsNum);
-                SelectInput_{{ attr }}.chageDataHdTypeValue();
                 {#this.getCloudPrice(true);#}
             },
             getHdValue: function(ebsNum, params){

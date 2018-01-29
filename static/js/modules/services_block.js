@@ -345,7 +345,7 @@ define(function(require, module, exports) {
                 $('#datahd_value').removeAttr('readonly')
             }
             if(initServicesFlage){
-                return
+                returncreate
             }
             $('#datahd_value').val($target.children('option:selected').attr('syshd'))
         },

@@ -10,13 +10,13 @@
      seajs.use(['jquery','modules/services_block','modules/calender', 'bootstrap-slider', 'bootbox', 'modules/pay'],
         function($,Services, calender, slider, bootbox, pay){
         var $el = $('.form-horizontal');
-        pay.params.slider_input = "SliderInput";
         var Slider = {
                 {{ attr }}_slider:$("#{{ attr }}").find(('input.slider-{{ attr }}')),
                 {{ attr }}_input: $("#{{ attr }}").find(('input.input-{{ attr }}')),
                 init: function(){
                     this.renderSlider();
-                    this.{{ attr }}_input.on('change', $.proxy(this.applyValueToSlider, this));
+                    pay.params.{{ attr }} = this.{{ attr }}_input.val();
+                    this.{{ attr }}_input.on('change', this.applyValueToSlider);
                 },
                 renderSlider: function() {
                     var self = this;
@@ -48,8 +48,9 @@
                         if ($target.val() > 300) {
                             $target.val(300);
                         }
-                        this.applySliderValue($target.val(), $target);
+                        Slider.applySliderValue($target.val(), $target);
                     }
+                    pay.params.{{ attr }} = Slider.{{ attr }}_input.val()
                 }
             };
             Slider.init();

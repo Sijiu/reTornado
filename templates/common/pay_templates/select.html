@@ -7,8 +7,12 @@
     seajs.use(['jquery','modules/services_block','modules/calender', 'bootstrap-slider', 'bootbox', 'modules/pay'],
         function($,Services, calender, slider, bootbox, pay){
         var Select ={
-            init: function(){},
+            init: function(){
+                pay.params.{{ attr }} = $('#{{ attr }}_select').val();
+                $('#{{ attr }}').on("change", this.changeZone);
+            },
             changeZone:function(e){
+                $('#{{ attr }}_select').val();
             {#    e.preventDefault();#}
             {#    var thisOs=this.$os;#}
             {#    var thisVpc=this.$vpc;#}
