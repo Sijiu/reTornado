@@ -28,8 +28,12 @@ BU = {
                             "910fd013c59211e6b63fa0369f9f6a76": {
                                 "name": u"西安节点",
                                 "parent_name": u"西安"
-                            }
-                        },
+                            },
+                            '7b119b2a08ba11e3a674ac162d757d14': {
+                                'name': u'上海节点1',
+                                "parent_name": u"上海"
+                            },
+                        }
                     },
                 "memory": {
                         "name": u'内存',
@@ -90,8 +94,9 @@ BU = {
                 },
                 "sale_price": {
                     "name": "销售价格",
-                    "inputType": "calculator",
-                    "fixed": {"value": "", "unit": "元"},
+                    "inputType": "input",
+                    "inputs": {"type": "number", "value": "", "unit": "元", "default": "",},
+                    "apiUrl": ""
                 },
                 "payment": {
                     "name": "出账时间",
@@ -164,7 +169,8 @@ BU = {
                     "inputType": "select",
                     "valueList": {
 
-                    }
+                    },
+                    "apiUrl": ""
                 },
                 "periods": {
                     "name": u"订购时长",
@@ -186,7 +192,7 @@ BU = {
                 "sale_price": {
                     "name": "销售价格",
                     "inputType": "calculator",
-                    "fixed": {"value": "", "unit": "元"},
+                    "inputs": {"value": "", "unit": "元"},
                 },
                 "payment": {
                     "name": "出账时间",

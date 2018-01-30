@@ -18,7 +18,7 @@
         <div class="btn-group btn-group-justified {% if i!=1 %}hidden{%end%}" data-inner="{{ i }}">
         {% for k in inner_value[i] %}
         <div class="btn-group" >
-            <a data-type="{{ attr }}" data-value="{{ int(k)*1024 }}" class="btn btn-primary btn-lg  {% if int(k)==1 %}active{%end%}">
+            <a data-type="{{ attr }}" data-value="{{ int(k)*1024 }}" class="btn btn-primary btn-lg  {% if int(k)==i %}active{%end%}">
                 {{ k }} {{ unit }}
             </a>
         </div>

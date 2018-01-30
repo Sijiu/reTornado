@@ -31,25 +31,32 @@
         function($,Services, calender, slider, bootbox, pay){
         var SelectInput_{{ attr }} = {
             self : this,
-            {{ attr }}_type : $("#{{ attr }}").find('#{{ attr }}_select'),
-            {{ attr }}_value : $("#{{ attr }}").find('#{{ attr }}_value'),
+            {{ attr }}_type : $('#{{ attr }}_select'),
+            {{ attr }}_value : $('#{{ attr }}_value'),
             $ebsNum: $("#{{ attr }}").find('#ebsNum'),
             addebs: $("#{{ attr }}").find('#addebs'),
             delebs: $("#{{ attr }}").find('a[data-type=delebs]'),
+        {% if attr != "data_hd" %}
             init: function(){
-                {% if attr != "data_hd" %}
-                    pay.params.{{ attr }}_type = this.{{ attr }}_type.val();
-                    pay.params.{{ attr }}_value = this.{{ attr }}_value.val();
-                {% end %}
+                pay.params.{{ attr }}_type = this.{{ attr }}_type.val();
+                pay.params.{{ attr }}_value = this.{{ attr }}_value.val();
+                this.{{ attr }}_type.on('change', this.RefreshTypeValue);
+                this.{{ attr }}_value.on('change', this.RefreshTypeValue);
+            },
+            RefreshTypeValue: function(){
+                pay.params.{{ attr }}_type = SelectInput_{{ attr }}.{{ attr }}_type.val();
+                pay.params.{{ attr }}_value = SelectInput_{{ attr }}.{{ attr }}_value.val();
+            },
+        {% else %}
+            init: function(){
                 this.addebs.on('click', this.addEbsDiv);
                 this.delebs.on('click', this.delEbsDiv);
-                this.{{ attr }}_type.on('change', this.getHDType);
+                this.{{ attr }}_type.on('change', this.chageDataHdTypeValue);
                 this.{{ attr }}_value.on('change', this.chageDataHdTypeValue);
             },
             addEbsDiv:function(){
                 var ebsNum=parseInt(SelectInput_{{ attr }}.$ebsNum.val());
                 var data_hd_div = $('.{{ attr }}_div');
-                pay.params.select_input = "SelectInput";
                 if(ebsNum>=5){
                     bootbox.alert('最多只能添加5块数据盘');
                     return false;
@@ -67,10 +74,8 @@
                 SelectInput_{{ attr }}.chageDataHdTypeValue();
                 {#this.getCloudPrice(true);#}
             },
-            getHDType: function(){
-                pay.params.{{ attr }}_type = SelectInput_{{ attr }}.{{ attr }}_type.val();
-            },
             chageDataHdTypeValue:function(){
+                var data_hd = {};
                 if(pay.local.serviceTag ==='vms'){
                     var numMax =2000;
                     var step=10;
@@ -92,12 +97,13 @@
                     num =  Math.floor(num /step)*step;
                     $target.val(num);
                 }
-                pay.params = SelectInput_{{ attr }}.getHdValue(SelectInput_{{ attr }}.$ebsNum.val(), pay.params);
+                pay.params.{{ attr }} = SelectInput_{{ attr }}.getHdValue(SelectInput_{{ attr }}.$ebsNum.val(), data_hd);
                 {#this.getCloudPrice(true);#}
             },
             delEbsDiv:function(e){
                 var ebsNum=parseInt(SelectInput_{{ attr }}.$ebsNum.val());
                 var $target = $(e.currentTarget);
+                var data_hd = {};
                 if(ebsNum<=0){
                     return false;
                 }
@@ -108,6 +114,8 @@
                 }
                 ebsNum--;
                 SelectInput_{{ attr }}.$ebsNum.val(ebsNum);
+                pay.params.{{ attr }} = SelectInput_{{ attr }}.getHdValue(SelectInput_{{ attr }}.$ebsNum.val(), data_hd);
+                console.log("pay.params.{{ attr }}==", pay.params.{{ attr }});
                 {#this.getCloudPrice(true);#}
             },
             getHdValue: function(ebsNum, params){
@@ -116,9 +124,9 @@
                     params['{{ attr }}_type'+(i+1)]=hd_div.find('select[name="{{ attr }}_select"]').val();
                     params['{{ attr }}_value'+(i+1)]=hd_div.find('input[name="{{ attr }}_value"]').val();
                 }
-                console.log(params);
                 return params;
             },
+        {% end %}
         };
             SelectInput_{{ attr }}.init();
     });

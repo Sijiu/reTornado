@@ -1,6 +1,25 @@
  {% set value = productAttr[attr]["inputs"] %}
-    <input type="{{ value["type"] }}" class="form-control col-sm-4"
+ <div class="input-group col-sm-2">
+    <input type="{{ value["type"] }}" class="form-control"
            id="{{ attr }}" name="{{ attr }}" value="{{ value["default"] }}">
     {% if value.get("unit", "") %}
     <span class="input-group-addon">{{ value["unit"]}}</span>
-{% end %}
+    {% end %}
+ </div>
+<script>
+     seajs.use(['jquery','modules/services_block','modules/calender', 'bootstrap-slider', 'bootbox', 'modules/pay'],
+        function($,Services, calender, slider, bootbox, pay) {
+             var Input_{{ attr }} = {
+                attr: $("#{{ attr }}").find("[name='{{ attr }}']"),
+                init: function(){
+                    pay.params.{{ attr }} = this.attr.val();
+                    this.attr.on("change", this.changeValue);
+                    console.log("{{ attr }}", pay.params.{{ attr }})
+                },
+                 changeValue: function(){
+                    pay.params.{{ attr }} = Input_{{ attr }}.attr.val();
+                 }
+            };
+            Input_{{ attr }}.init();
+        });
+</script>

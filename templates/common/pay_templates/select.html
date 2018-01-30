@@ -12,7 +12,7 @@
                 $('#{{ attr }}').on("change", this.changeZone);
             },
             changeZone:function(e){
-                $('#{{ attr }}_select').val();
+                pay.params.{{ attr }} = $('#{{ attr }}_select').val();
             {#    e.preventDefault();#}
             {#    var thisOs=this.$os;#}
             {#    var thisVpc=this.$vpc;#}
