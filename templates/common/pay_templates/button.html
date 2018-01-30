@@ -27,8 +27,8 @@
     {% end %}
 {% end %}
 <script>
-     seajs.use(['jquery','modules/services_block','modules/calender', 'bootstrap-slider', 'bootbox', 'modules/pay'],
-        function($,Services, calender, slider, bootbox, pay){
+     seajs.use(['jquery','modules/calender', 'bootstrap-slider', 'bootbox', 'modules/pay'],
+        function($, calender, slider, bootbox, pay){
         var $el = $('.form-horizontal');
         var Button_{{ attr }} = {
             init: function(){

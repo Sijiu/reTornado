@@ -69,11 +69,11 @@
 </section>
         <div id="calendarPanel" style="position: absolute;visibility: hidden;z-index: 9999;background-color: #FFFFFF;border: 1px solid #CCCCCC;width:175px;font-size:12px;"></div>
 <script>
-    seajs.use(['jquery','modules/services_block','modules/calender', 'bootstrap-slider', 'bootbox', "modules/pay"],
-        function($,Services,calender, slider, bootbox, pay) {
+    seajs.use(['jquery', 'modules/calender', 'bootstrap-slider', 'bootbox', "modules/pay"],
+        function($,calender, slider, bootbox, pay) {
         var $el = $('.form-horizontal');
         var initData = $.parseJSON('{% raw initData %}');
-        pay.local.serviceTag = $el.find('#serviceTag').val();
+        pay.params.serviceTag = $el.find('#serviceTag').val();
         console.log(initData, "initData")
         var sCalendar = new calender();
         $('#period_day').on('click',function(e){new calender().show(this)});
