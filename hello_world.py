@@ -19,15 +19,38 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 import os
+import time
+
+from tornado import gen
 from tornado.options import define, options
 
 define("port", default=8888, help="run on the given port", type=int)
 
 
+def get_order(max_num=5):
+    n, a, b = 0, 0, 1
+    order = {}
+    while n < max_num:
+        order = {b: b}
+        gen.sleep(10)
+        # yield order
+        print b
+        a, b = b, a + b
+        n = n + 1
+    return order
+
+
 class MainHandler(tornado.web.RequestHandler):
 
+    @gen.coroutine
     def get(self):
-        self.write("Hello, world  start")
+        order = yield get_order()
+        order = {"order": "test"}
+        # time.sleep(10)
+        print order
+        self.write(order)
+        self.finish()
+        # raise gen.Return()
 
 
 class BillHandler(tornado.web.RequestHandler):
@@ -37,15 +60,14 @@ class BillHandler(tornado.web.RequestHandler):
         self.render("bussiness/index.html")
 
 
-
 def main():
     tornado.options.parse_command_line()
     settings = {
         'template_path': 'templates',  # 配置文件路径,设置完可以把HTML文件放置template
-        'static_path': 'static',  # 静态文件的配置
+        'static_path'  : 'static',  # 静态文件的配置
         #     'static_url_prefix':'/sss/'   # 静态文件的前缀，在静态文件夹前面加上这个前缀
         'cookie_secret': "cookie_secret",  # cookie生成秘钥时候需提前生成随机字符串，需要在这里进行渲染
-        'xsrf_cokkies': True,  # 允许CSRF使用
+        'xsrf_cokkies' : True,  # 允许CSRF使用
     }
 
     application = tornado.web.Application([
@@ -60,5 +82,5 @@ def main():
     tornado.ioloop.IOLoop.instance().start()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
