@@ -20,6 +20,9 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 import os
+
+from tornado import gen, escape
+from tornado.httpclient import AsyncHTTPClient
 from tornado.options import define, options
 from portal.bussiness_type import BU
 
@@ -37,11 +40,36 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_status(204)
         self.finish()
 
+
 class MainHandler(BaseHandler):
 
+    @gen.coroutine
     def get(self):
-        self.write("Hello, world  start")
+        resp = yield fab(5)
+        self.write(resp)
 
+
+@gen.coroutine
+def fab(max_num):
+    n, a, b = 0, 0, 1
+    while n < max_num:
+        yield {b:b}
+        # print b
+        a, b = b, a + b
+        n = n + 1
+
+
+@gen.coroutine
+def get_user():
+    client = AsyncHTTPClient()
+    resp = yield client.fetch("https://api.github.com/users")
+    print resp, "===="
+    if resp.code == 200:
+        resp = escape.json_decode(resp.body)
+    else:
+        resp = {"message": "fetch client error"}
+        # logger.error("client fetch error %d, %s" % (resp.code, resp.message))
+    raise gen.Return(resp)
 
 class BillHandler(BaseHandler):
 
@@ -82,6 +110,7 @@ class CreateResourceHandler(BaseHandler):
         param = self.get_body_argument("id", "ids")
         self.write(param)
 
+
 def main():
     tornado.options.parse_command_line()
     settings = {
@@ -111,5 +140,6 @@ def main():
     tornado.ioloop.IOLoop.instance().start()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     main()
+    print "hello plain PC"
